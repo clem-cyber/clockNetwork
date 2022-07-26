@@ -1,0 +1,20 @@
+#! /bin/bash
+
+if (( $EUID != 0 )); then
+echo "Error : Permission non accordée"
+exit 0
+fi
+
+sudo rm -r /tmpclocknetwork/
+git init
+git clone https://github.com/clem-cyber/clockNetwork /tmpclocknetwork
+cd /tmpclocknetwork/
+git pull
+
+sudo g++ /tmpclocknetwork/client.cpp -o /usr/local/bin/clock
+sudo g++ -pthread /tmpclocknetwork/serveur.cpp -o /usr/local/bin/clocknetwork
+sudo g++ /tmpclocknetwork/setTime.cpp -o /usr/local/bin/setTime
+
+cd -
+
+sudo rm -r /tmpclocknetwork/
