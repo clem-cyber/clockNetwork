@@ -1,8 +1,14 @@
 #! /bin/bash
 
-if (( $EUID != 0 )); then
-echo "Error : Permission non accordée"
-exit 0
+if (( $EUID != 0 ))
+then
+  echo "Error : Permission non accordée"
+  exit 0
+fi
+
+if [[ -d /tmpclocknetwork ]]
+then
+  rm -rf /tmpclocknetwork
 fi
 
 sudo rm -r /tmpclocknetwork/
