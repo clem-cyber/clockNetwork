@@ -40,7 +40,7 @@ void settingTime ()
 	while (true)
 	{
 		char msg_write[1024] = "";
-		cout << ">";
+		cout << "#>";
 		cin.getline(msg_write, 256);
 		string total(msg_write);
 		if (total.substr(0, 7) == "setTime")
