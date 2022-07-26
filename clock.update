@@ -11,7 +11,6 @@ then
   rm -rf /tmpclocknetwork
 fi
 
-sudo rm -r /tmpclocknetwork/
 git init
 git clone https://github.com/clem-cyber/clockNetwork /tmpclocknetwork
 cd /tmpclocknetwork/
