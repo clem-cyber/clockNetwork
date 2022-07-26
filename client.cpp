@@ -37,7 +37,7 @@ int main (int argc, char* argv[])
 	while (true)
 	{
 		char msg_write[1024] = "";
-		cout << ">>";
+		cout << ">";
 		cin.getline(msg_write, 256);
 		
 		if (write(sock_client, msg_write, strlen(msg_write)) == -1)
