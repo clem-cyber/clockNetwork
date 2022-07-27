@@ -1,25 +1,79 @@
 #! /bin/bash
 
+path="/tmpclocknetwork"
+installed_version=$(cat /etc/clockNetwork/clocknetwork.version)
+
 if (( $EUID != 0 ))
 then
   echo "Error : Permission non accordée"
   exit 0
 fi
 
-if [[ -d /tmpclocknetwork ]]
+if [[ -d $path ]]
 then
-  rm -rf /tmpclocknetwork
+  rm -rf $path
 fi
 
+echo "Récupération des fichiers..."
+
+{
 git init
 git clone https://github.com/clem-cyber/clockNetwork /tmpclocknetwork
-cd /tmpclocknetwork/
-git pull
+} &>/dev/null
 
-sudo g++ /tmpclocknetwork/client.cpp -o /usr/local/bin/clock
-sudo g++ -pthread /tmpclocknetwork/serveur.cpp -o /usr/local/bin/clocknetwork
-sudo g++ /tmpclocknetwork/setTime.cpp -o /usr/local/bin/setTime
+if [[ -d $path ]]
+then
+  echo "Connexion réussie"
+  echo "Vérification de l'intégrité des fichiers..."
+  if [[ -f $path/client.cpp && -f $path/serveur.cpp && -f $path/setTime.cpp && $path/port.config && $path/clocknetwork.version ]]
+  then
+    echo "Fichiers récupérés avec succès"
+    echo "Recherche de mises à jour"
+    new_version=$(cat $path/clocknetwork.version)
+    if [ $installed_version = $new_version ]
+    then
+      echo "Aucune mise à jour trouvé"
+      echo "Tous les fichiers sont déjà à jour"
+      exit 0
+    fi
+  else
+    echo "Échec lors de la récupération des fichiers"
+    echo "Mise à jour échouée..."
+    exit 0
+  fi
+else
+  echo "Connexion non réussie"
+  echo "Échec de la mise à jour..."
+  exit 0
+fi
+
+cd $path
+echo $PWD
+
+git pull &>/dev/null
+
+echo "Compilation et création des exécutables..."
+
+{
+sudo mv $path/port.config /etc/clockNetwork/port.config
+sudo mv $path/clocknetwork.version /etc/clockNetwork/clocknetwork.version
+sudo g++ client.cpp -o /usr/local/bin/clock
+sudo g++ -pthread serveur.cpp -o /usr/local/bin/clocknetwork
+sudo g++ setTime.cpp -o /usr/local/bin/setTime
+} &>/dev/null
+
+if [[ -f /usr/local/bin/clock && -f /usr/local/bin/clocknetwork && -f /usr/local/bin/setTime ]]
+then
+  echo "Compilation réussie"
+  echo "Fichiers créés avec succès"
+else
+  echo "Erreur lors de la compilation"
+  echo "La mise à jour a échouée..."
+  exit 0
+fi
 
 cd -
 
-sudo rm -r /tmpclocknetwork/
+sudo rm -r $path
+
+echo "Mise à jour réussie"
