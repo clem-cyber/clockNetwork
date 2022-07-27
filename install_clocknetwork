@@ -1,0 +1,74 @@
+#! /bin/bash
+
+path="/tmpclocknetwork"
+
+if (( $EUID != 0 ))
+then
+  echo "Error : Permission non accordée"
+  exit 0
+fi
+
+if [[ -d $path ]]
+then
+  rm -rf $path
+fi
+
+echo "Récupération des fichiers..."
+
+{
+git init
+git clone https://github.com/clem-cyber/clockNetwork /tmpclocknetwork
+} &>/dev/null
+
+if [[ -d $path ]]
+then
+  echo "Connexion réussie"
+  echo "Vérification de l'intégrité des fichiers..."
+  if [[ -f $path/client.cpp && -f $path/serveur.cpp && -f $path/setTime.cpp && $path/clock.update && $path/port.config && $path/clocknetwork.version ]]
+  then
+    echo "Fichiers récupérés avec succès"
+  else
+    echo "Échec lors de la récupération des fichiers"
+    echo "L'installation a échouée..."
+    exit 0
+  fi
+else
+  echo "Connexion non réussie"
+  echo "Échec de l'installation"
+  exit 0
+fi
+
+cd $path
+echo $PWD
+
+git pull &>/dev/null
+
+echo "Création des fichiers de configuration..."
+sudo mkdir /etc/clockNetwork/
+sudo mv $path/port.config /etc/clockNetwork/port.config
+sudo mv $path/clocknetwork.version /etc/clockNetwork/clocknetwork.version
+
+echo "Compilation et création des exécutables..."
+
+{
+sudo mv $path/clock.update /usr/local/bin/clock.update
+sudo g++ client.cpp -o /usr/local/bin/clock
+sudo g++ -pthread serveur.cpp -o /usr/local/bin/clocknetwork
+sudo g++ setTime.cpp -o /usr/local/bin/setTime
+} &>/dev/null
+
+if [[ -f /usr/local/bin/clock && -f /usr/local/bin/clocknetwork && -f /usr/local/bin/setTime ]]
+then
+  echo "Compilation réussie"
+  echo "Fichiers créés avec succès"
+else
+  echo "Erreur lors de la compilation"
+  echo "L'installation a échouée..."
+  exit 0
+fi
+
+cd -
+
+sudo rm -r $path
+
+echo "Installation réussie"
