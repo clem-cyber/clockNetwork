@@ -1,0 +1,33 @@
+#! /bin/bash
+
+path="/usr/local/bin/"
+
+if (( $EUID != 0 ))
+then
+  echo "Error : Permission non accordée"
+  exit 0
+fi
+
+echo "Désinstallation..."
+
+if [[ -d /etc/clockNetwork ]]
+then
+  echo "Recherche des fichiers de configuration..."
+  sudo rm -rf /etc/clockNetwork
+  echo "Suppression effectuée avec succès"
+else
+  echo "Error : Aucun fichier de configuration trouvé"
+fi
+
+echo "Recherche des exécutables..."
+if [[ -f $path/clock && -f $path/clocknetwork && -f $path/setTime && $path/clock.update ]]
+then
+  sudo rm -f $path/clock && rm -f $path/clocknetwork && rm -f $path/setTime && rm -f $path/clock.update
+  echo "Suppresion effectuée avec succès"
+else
+  echo "Error : Aucun exécutable touvée"
+  exit 0
+fi
+
+echo "Succès : Désinstallation réussie"
+
