@@ -24,7 +24,7 @@ if [[ -d $path ]]
 then
   echo "Connexion réussie"
   echo "Vérification de l'intégrité des fichiers..."
-  if [[ -f $path/client.cpp && -f $path/serveur.cpp && -f $path/setTime.cpp && $path/clock.update && $path/port.config && $path/clocknetwork.version ]]
+  if [[ -f $path/client.cpp && -f $path/serveur.cpp && -f $path/setTime.cpp && $path/clock.update && $path/port.config && $path/clocknetwork.version && $path/desinstall_clocknetwork ]]
   then
     echo "Fichiers récupérés avec succès"
   else
@@ -55,8 +55,8 @@ sudo mv $path/clock.update /usr/local/bin/clock.update
 sudo g++ client.cpp -o /usr/local/bin/clock
 sudo g++ -pthread serveur.cpp -o /usr/local/bin/clocknetwork
 sudo g++ setTime.cpp -o /usr/local/bin/setTime
-sudo chmod +x desintall_clocknetwork
-sudo mv $path/desintall_clocknetwork /usr/local/bin/clocknetwork.erase
+sudo chmod +x desinstall_clocknetwork
+sudo mv $path/desinstall_clocknetwork /usr/local/bin/clocknetwork.erase
 } &>/dev/null
 
 if [[ -f /usr/local/bin/clock && -f /usr/local/bin/clocknetwork && -f /usr/local/bin/setTime ]]
