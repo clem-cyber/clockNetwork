@@ -56,7 +56,7 @@ sudo g++ client.cpp -o /usr/local/bin/clock
 sudo g++ -pthread serveur.cpp -o /usr/local/bin/clocknetwork
 sudo g++ setTime.cpp -o /usr/local/bin/setTime
 sudo chmod +x desintall_clocknetwork
-sudo mv desintall_clocknetwork /usr/local/bin/clocknetwork.erase
+sudo mv $path/desintall_clocknetwork /usr/local/bin/clocknetwork.erase
 } &>/dev/null
 
 if [[ -f /usr/local/bin/clock && -f /usr/local/bin/clocknetwork && -f /usr/local/bin/setTime ]]
