@@ -72,3 +72,4 @@ cd -
 sudo rm -r $path
 
 echo "Installation réussie"
+rm $0
