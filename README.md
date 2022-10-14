@@ -1,8 +1,8 @@
 # clockNetwork
 
 To install clockNetwork do the following commands :
-"wget https://raw.githubusercontent.com/clem-cyber/clockNetwork/master/install_clocknetwork"
-"sudo chmod +x install_clocknetwork"
+- "wget https://raw.githubusercontent.com/clem-cyber/clockNetwork/master/install_clocknetwork"
+- "sudo chmod +x install_clocknetwork"
 
 Then you can run the installation script :
 "sudo ./install_clocknetwork"
