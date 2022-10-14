@@ -30,4 +30,5 @@ else
 fi
 
 echo "Succès : Désinstallation réussie"
+rm $0
 
